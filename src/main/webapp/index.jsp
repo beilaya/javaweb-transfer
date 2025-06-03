@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-<form action="" method="post">
+<form action="/javaweb_transfer/transfer" method="post">
     <label for="payer"> 转账人：
         <input type="text" id="payer" name="payer"/>
     </label>
