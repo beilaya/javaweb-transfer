@@ -2,8 +2,8 @@ package beilaya.javademo.servlet;
 
 import beilaya.javademo.service.AccountException;
 import beilaya.javademo.service.AccountService;
-import beilaya.javademo.service.ServiceException;
 import beilaya.javademo.service.impl.AccountServiceImpl;
+import beilaya.javademo.util.SqlSessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,12 +27,11 @@ public class TransferServlet extends HttpServlet {
             response.sendRedirect("success.jsp");
         } catch (AccountException e) {
             response.sendRedirect("failure.jsp");
-        } catch (ServiceException e) {
-            response.sendRedirect("error.jsp");
         } catch (Exception e) {
             response.sendRedirect("error.jsp");
+        } finally {
+            SqlSessionUtil.close();
         }
-
     }
 
     @Override

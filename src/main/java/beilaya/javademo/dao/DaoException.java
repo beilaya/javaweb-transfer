@@ -1,6 +1,6 @@
 package beilaya.javademo.dao;
 
-public class DaoException extends Throwable {
+public class DaoException extends Exception {
     public DaoException() {
     }
 

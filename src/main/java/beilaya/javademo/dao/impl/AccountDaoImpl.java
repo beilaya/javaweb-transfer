@@ -16,8 +16,6 @@ public class AccountDaoImpl implements AccountDao {
             account = sqlSession.selectOne("Account.selectByUsername", username);
         } catch (Exception e) {
             throw new DaoException("DAO：无法查询用户信息");
-        } finally {
-            if (sqlSession != null) sqlSession.close();
         }
         return account;
     }
@@ -25,19 +23,11 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public int updateAccount(Account account) throws DaoException {
         int rows = 0;
-        SqlSession sqlSession = null;
         try {
-            sqlSession = SqlSessionUtil.getSqlSession();
+            SqlSession sqlSession = SqlSessionUtil.getSqlSession();
             rows = sqlSession.update("Account.updateById", account);
-            if (rows != 1) {
-                throw new DaoException("DAO：无法更新用户信息");
-            }
-            sqlSession.commit();
         } catch (Exception e) {
-            if (sqlSession != null) sqlSession.rollback();
-            throw new DaoException(e);
-        } finally {
-            if (sqlSession != null) sqlSession.close();
+            throw new DaoException(e.getMessage());
         }
         return rows;
     }

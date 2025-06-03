@@ -1,12 +1,12 @@
 package beilaya.javademo.service.impl;
 
 import beilaya.javademo.dao.AccountDao;
-import beilaya.javademo.dao.DaoException;
 import beilaya.javademo.dao.impl.AccountDaoImpl;
 import beilaya.javademo.domain.Account;
 import beilaya.javademo.service.AccountException;
 import beilaya.javademo.service.AccountService;
 import beilaya.javademo.service.ServiceException;
+import beilaya.javademo.util.SqlSessionUtil;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -33,12 +33,13 @@ public class AccountServiceImpl implements AccountService {
             toAccount.setBalance(toAccount.getBalance() + amount);
             ACOUNT_DAO.updateAccount(toAccount);
 
-        } catch (DaoException e) {
-            throw new ServiceException("转账失败：服务器繁忙");
+            SqlSessionUtil.commit();
         } catch (AccountException e) {
             throw new AccountException(e.getMessage());
         } catch (Exception e) {
+            SqlSessionUtil.rollback();
             throw new ServiceException(e.getMessage());
         }
     }
+
 }

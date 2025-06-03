@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public final class SqlSessionUtil {
     private static final SqlSessionFactory SQLSESSION_FACTORY;
+    private static final ThreadLocal<SqlSession> SQLSESSION_HOLDER = new ThreadLocal<>();
+
     static {
         try {
             SQLSESSION_FACTORY = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));
@@ -18,6 +20,32 @@ public final class SqlSessionUtil {
     }
 
     public static SqlSession getSqlSession() {
-        return SQLSESSION_FACTORY.openSession();
+        SqlSession sqlSession = SQLSESSION_HOLDER.get();
+        if (sqlSession == null) {
+            sqlSession = SQLSESSION_FACTORY.openSession();
+            SQLSESSION_HOLDER.set(sqlSession);
+        }
+        return sqlSession;
+    }
+
+    public static void commit() {
+        SqlSession sqlSession = SQLSESSION_HOLDER.get();
+        if (sqlSession != null) {
+            sqlSession.commit();
+        }
+    }
+
+    public static void rollback() {
+        SqlSession sqlSession = SQLSESSION_HOLDER.get();
+        if (sqlSession != null) {
+            sqlSession.rollback();
+        }
+    }
+
+    public static void close() {
+        SqlSession sqlSession = SQLSESSION_HOLDER.get();
+        if (sqlSession != null) {
+            sqlSession.close();
+        }
     }
 }

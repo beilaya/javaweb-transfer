@@ -1,6 +1,6 @@
 package beilaya.javademo.service;
 
-public class AccountException extends Throwable{
+public class AccountException extends Exception{
     public AccountException() {
     }
 
